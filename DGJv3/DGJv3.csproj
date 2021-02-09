@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DGJv3</RootNamespace>
     <AssemblyName>DGJv3</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,14 +46,13 @@
     <DllExportPeCheck>3</DllExportPeCheck>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BilibiliDM_PluginFramework">
-      <HintPath>.\BilibiliDM_PluginFramework.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="DllExport, PublicKeyToken=8337224c9ad9e356">
       <HintPath>$(SolutionDir)packages\DllExport.1.6.1\gcache\metalib\$(DllExportNamespace)\$(DllExportMetaLibName)</HintPath>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DouyuDM_PluginFramework">
+      <HintPath>.\DouyuDM_PluginFramework.dll</HintPath>
     </Reference>
     <Reference Include="LoginCenter, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -65,11 +65,14 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.4.1.1101, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.4.1.1101\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
+    <Reference Include="Music-SDK, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoelWu.Music.SDK.1.0.6\lib\netstandard2.0\Music-SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -79,6 +82,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -89,50 +93,48 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlackListItem.cs" />
-    <Compile Include="BlackListType.cs" />
-    <Compile Include="BlackListTypeStringConverter.cs" />
-    <Compile Include="BuildInfo.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="DanmuHandler.cs" />
+    <Compile Include="Models\Items\BlackListItem.cs" />
+    <Compile Include="Models\Enums\BlackListType.cs" />
+    <Compile Include="Models\UI\Converter\BlackListTypeStringConverter.cs" />
+    <Compile Include="Data\BuildInfo.cs" />
+    <Compile Include="Data\Config.cs" />
+    <Compile Include="Utils\DanmuHandler.cs" />
     <Compile Include="DGJMain.cs" />
     <Compile Include="DGJWindow.xaml.cs">
       <DependentUpon>DGJWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Downloader.cs" />
-    <Compile Include="DownloadStatus.cs" />
-    <Compile Include="EnumerationExtension.cs" />
-    <Compile Include="FuckRegsvr32.cs" />
-    <Compile Include="InternalModule\LwlApiBaidu.cs" />
-    <Compile Include="InternalModule\LwlApiBaseModule.cs" />
-    <Compile Include="InternalModule\LwlApiKugou.cs" />
-    <Compile Include="InternalModule\LwlApiNetease.cs" />
-    <Compile Include="InternalModule\LwlApiTencent.cs" />
-    <Compile Include="InternalModule\LwlApiXiami.cs" />
-    <Compile Include="LoginCenterAPIWarpper.cs" />
-    <Compile Include="LyricChangedEvent.cs" />
-    <Compile Include="NullSearchModule.cs" />
-    <Compile Include="PlayerVolumeConverter.cs" />
-    <Compile Include="NotEqualsVisibilityConverter.cs" />
-    <Compile Include="LogEvent.cs" />
-    <Compile Include="Lrc.cs" />
-    <Compile Include="EqualsVisibilityConverter.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="PlayerStatus.cs" />
-    <Compile Include="PlayerType.cs" />
+    <Compile Include="Utils\Downloader.cs" />
+    <Compile Include="Models\Enums\DownloadStatus.cs" />
+    <Compile Include="Extensions\EnumerationExtension.cs" />
+    <Compile Include="InternalModule\CoelSdkBaseModule.cs" />
+    <Compile Include="InternalModule\CoelSdkBiliBili.cs" />
+    <Compile Include="InternalModule\CoelSdkKuGou.cs" />
+    <Compile Include="InternalModule\CoelSdkKuWo.cs" />
+    <Compile Include="InternalModule\CoelSdkNetease.cs" />
+    <Compile Include="InternalModule\CoelSdkQQ.cs" />
+    <Compile Include="Models\Events\LyricChangedEvent.cs" />
+    <Compile Include="Models\Modules\NullSearchModule.cs" />
+    <Compile Include="Models\UI\Converter\PlayerVolumeConverter.cs" />
+    <Compile Include="Models\UI\Converter\NotEqualsVisibilityConverter.cs" />
+    <Compile Include="Models\Events\LogEvent.cs" />
+    <Compile Include="Models\Items\Lrc.cs" />
+    <Compile Include="Models\UI\Converter\EqualsVisibilityConverter.cs" />
+    <Compile Include="Utils\Player.cs" />
+    <Compile Include="Models\Enums\PlayerStatus.cs" />
+    <Compile Include="Models\Enums\PlayerType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchModule.cs" />
-    <Compile Include="SearchModules.cs" />
-    <Compile Include="SongInfo.cs" />
-    <Compile Include="SongItem.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="SongStatus.cs" />
-    <Compile Include="SongStatusStringConverter.cs" />
-    <Compile Include="UniversalCommand.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="VersionChecker.cs" />
-    <Compile Include="WaveoutEventDeviceInfo.cs" />
-    <Compile Include="Writer.cs" />
+    <Compile Include="Models\Modules\SearchModule.cs" />
+    <Compile Include="Models\Modules\SearchModules.cs" />
+    <Compile Include="Models\Items\SongInfo.cs" />
+    <Compile Include="Models\Items\InternalSongItem.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Models\Enums\SongStatus.cs" />
+    <Compile Include="Models\UI\Converter\SongStatusStringConverter.cs" />
+    <Compile Include="Utils\UniversalCommand.cs" />
+    <Compile Include="Utils\Utilities.cs" />
+    <Compile Include="Utils\VersionChecker.cs" />
+    <Compile Include="Utils\WaveoutEventDeviceInfo.cs" />
+    <Compile Include="Utils\Writer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -144,8 +146,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BuildInfo.txt" />
+    <None Include="Data\BuildInfo.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterResolveReferences">
     <ItemGroup>
@@ -167,5 +170,8 @@
   <PropertyGroup>
     <PreBuildEvent>cd $(SolutionDir)
 PowerShell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>cmd /c copy /Y "$(TargetPath)" "%25USERPROFILE%25\Documents\斗鱼弹幕姬\Plugins\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

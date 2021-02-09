@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Music.SDK.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -148,27 +149,39 @@ namespace DGJv3
             }
         }
 
-        protected abstract string GetDownloadUrl(SongItem songInfo);
+        protected abstract string GetDownloadUrl(SongItem songItem);
 
-        internal string SafeGetDownloadUrl(SongItem songInfo)
+        internal string SafeGetDownloadUrl(SongItem songItem)
         {
             try
             {
-                return GetDownloadUrl(songInfo);
+                return GetDownloadUrl(songItem);
             }
             catch (Exception ex)
             {
-                WriteError(ex, "SongId: " + songInfo.SongId);
+                WriteError(ex, "SongId: " + songItem.SongGId);
                 return null;
             }
         }
 
-        [Obsolete("Use GetLyricById instead", true)]
-        protected abstract string GetLyric(SongItem songInfo);
+        protected abstract string GetLyric(SongItem songItem);
 
-        protected abstract string GetLyricById(string Id);
+        internal string SafeGetLyric(SongItem songItem)
+        {
+            try
+            {
+                return GetLyric(songItem);
+            }
+            catch (Exception ex)
+            {
+                WriteError(ex, "Id: " + songItem.SongGId);
+                return null;
+            }
+        }
 
-        internal string SafeGetLyricById(string Id)
+        protected abstract string GetLyricById(string Id, string albumId = "");
+
+        internal string SafeGetLyricById(string Id, string albumId = "")
         {
             try
             {
@@ -221,7 +234,7 @@ namespace DGJv3
             }
             catch (Exception ex)
             {
-                WriteError(ex, "参数：filepath=" + item.FilePath + " id=" + item.SongId);
+                WriteError(ex, "参数：id=" + item.SongId);
                 return DownloadStatus.Failed;
             }
         }
@@ -301,7 +314,7 @@ namespace DGJv3
             try
             {
                 string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                using (StreamWriter outfile = new StreamWriter(path + @"\B站彈幕姬点歌姬歌曲搜索引擎" + ModuleName + "错误报告.txt"))
+                using (StreamWriter outfile = new StreamWriter(path + @"\斗鱼彈幕姬点歌姬歌曲搜索引擎" + ModuleName + "错误报告.txt"))
                 {
                     outfile.WriteLine("请将错误报告发给 " + ModuleAuthor + " 谢谢，联系方式：" + ModuleContact);
                     outfile.WriteLine(description);

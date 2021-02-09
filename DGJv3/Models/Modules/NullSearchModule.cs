@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Music.SDK.Models;
+using System;
 using System.Collections.Generic;
 
 namespace DGJv3
@@ -20,13 +21,12 @@ namespace DGJv3
             return null;
         }
 
-        [Obsolete("Use GetLyricById instead", true)]
         protected override string GetLyric(SongItem songInfo)
         {
             return null;
         }
 
-        protected override string GetLyricById(string Id)
+        protected override string GetLyricById(string Id, string albumId = "")
         {
             return null;
         }

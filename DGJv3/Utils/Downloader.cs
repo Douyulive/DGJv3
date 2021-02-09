@@ -16,7 +16,7 @@ namespace DGJv3
     {
         private Dispatcher dispatcher;
 
-        private ObservableCollection<SongItem> Songs;
+        private ObservableCollection<InternalSongItem> Songs;
 
         private DispatcherTimer newSongTimer = new DispatcherTimer(DispatcherPriority.Normal)
         {
@@ -40,7 +40,7 @@ namespace DGJv3
 
         private WebClient webClient = null;
 
-        private SongItem currentSong = null;
+        private InternalSongItem currentSong = null;
 
         private DateTime lastUpdateTime;
 
@@ -50,7 +50,7 @@ namespace DGJv3
 
         private TimeSpan timeout = TimeSpan.FromSeconds(5);
 
-        public Downloader(ObservableCollection<SongItem> songs)
+        public Downloader(ObservableCollection<InternalSongItem> songs)
         {
             Songs = songs;
             newSongTimer.Tick += NewSongTimer_Tick;

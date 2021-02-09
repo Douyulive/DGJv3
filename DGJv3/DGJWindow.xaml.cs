@@ -19,7 +19,7 @@ namespace DGJv3
     {
         public DGJMain PluginMain { get; set; }
 
-        public ObservableCollection<SongItem> Songs { get; set; }
+        public ObservableCollection<InternalSongItem> Songs { get; set; }
 
         public ObservableCollection<SongInfo> Playlist { get; set; }
 
@@ -54,43 +54,6 @@ namespace DGJv3
         public void Log(string text)
         {
             PluginMain.Log(text);
-
-            if (IsLogRedirectDanmaku)
-            {
-                Task.Run(() =>
-                {
-                    try
-                    {
-                        if (!PluginMain.RoomId.HasValue) { return; }
-
-                        string finalText = text.Substring(0, Math.Min(text.Length, LogDanmakuLengthLimit));
-                        string result = LoginCenterAPIWarpper.Send(PluginMain.RoomId.Value, finalText);
-                        if (result == null)
-                        {
-                            PluginMain.Log("发送弹幕时网络错误");
-                        }
-                        else
-                        {
-                            var j = JObject.Parse(result);
-                            if (j["msg"].ToString() != string.Empty)
-                            {
-                                PluginMain.Log("发送弹幕时服务器返回：" + j["msg"].ToString());
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex.GetType().FullName.Equals("LoginCenter.API.PluginNotAuthorizedException"))
-                        {
-                            IsLogRedirectDanmaku = false;
-                        }
-                        else
-                        {
-                            PluginMain.Log("弹幕发送错误 " + ex.ToString());
-                        }
-                    }
-                });
-            }
         }
 
         public DGJWindow(DGJMain dGJMain)
@@ -109,7 +72,7 @@ namespace DGJv3
 
             DataContext = this;
             PluginMain = dGJMain;
-            Songs = new ObservableCollection<SongItem>();
+            Songs = new ObservableCollection<InternalSongItem>();
             Playlist = new ObservableCollection<SongInfo>();
             Blacklist = new ObservableCollection<BlackListItem>();
 
@@ -127,7 +90,7 @@ namespace DGJv3
 
             RemoveSongCommmand = new UniversalCommand((songobj) =>
             {
-                if (songobj != null && songobj is SongItem songItem)
+                if (songobj != null && songobj is InternalSongItem songItem)
                 {
                     songItem.Remove(Songs, Downloader, Player);
                 }
@@ -135,10 +98,10 @@ namespace DGJv3
 
             RemoveAndBlacklistSongCommand = new UniversalCommand((songobj) =>
             {
-                if (songobj != null && songobj is SongItem songItem)
+                if (songobj != null && songobj is InternalSongItem songItem)
                 {
                     songItem.Remove(Songs, Downloader, Player);
-                    Blacklist.Add(new BlackListItem(BlackListType.Id, songItem.SongId));
+                    Blacklist.Add(new BlackListItem(BlackListType.Id, songItem.SongGId));
                 }
             });
 
@@ -172,9 +135,9 @@ namespace DGJv3
 
             ApplyConfig(Config.Load());
 
-            PluginMain.ReceivedDanmaku += (sender, e) => { DanmuHandler.ProcessDanmu(e.Danmaku); };
-            PluginMain.Connected += (sender, e) => { LwlApiBaseModule.RoomId = e.roomid; };
-            PluginMain.Disconnected += (sender, e) => { LwlApiBaseModule.RoomId = 0; };
+            PluginMain.ReceivedMessage += (sender, e) => { DanmuHandler.ProcessMessage(e.Message); };
+            PluginMain.Connected += (sender, e) => { CoelSdkBaseModule.RoomId = e.roomid; };
+            PluginMain.Disconnected += (sender, e) => { CoelSdkBaseModule.RoomId = 0; };
         }
 
         /// <summary>
@@ -196,20 +159,6 @@ namespace DGJv3
             Writer.ScribanTemplate = config.ScribanTemplate;
             IsLogRedirectDanmaku = config.IsLogRedirectDanmaku;
             LogDanmakuLengthLimit = config.LogDanmakuLengthLimit;
-
-            LogRedirectToggleButton.IsEnabled = LoginCenterAPIWarpper.CheckLoginCenter();
-            if (LogRedirectToggleButton.IsEnabled && IsLogRedirectDanmaku)
-            {
-                Task.Run(async () =>
-                {
-                    await Task.Delay(2000); // 其实不应该这么写的，不太合理
-                    IsLogRedirectDanmaku = await LoginCenterAPIWarpper.DoAuth(PluginMain);
-                });
-            }
-            else
-            {
-                IsLogRedirectDanmaku = false;
-            }
 
             Playlist.Clear();
             foreach (var item in config.Playlist)
@@ -302,7 +251,7 @@ namespace DGJv3
                     return;
                 }
 
-                Songs.Add(new SongItem(songInfo, "主播")); // TODO: 点歌人名字
+                Songs.Add(new InternalSongItem(songInfo, "主播")); // TODO: 点歌人名字
             }
             AddSongsTextBox.Text = string.Empty;
         }
@@ -407,21 +356,6 @@ namespace DGJv3
         {
             e.Cancel = true;
             Hide();
-        }
-
-        private async void LogRedirectToggleButton_OnChecked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (!await LoginCenterAPIWarpper.DoAuth(PluginMain))
-                {
-                    LogRedirectToggleButton.IsChecked = false;
-                }
-            }
-            catch (Exception)
-            {
-                LogRedirectToggleButton.IsChecked = false;
-            }
         }
     }
 }

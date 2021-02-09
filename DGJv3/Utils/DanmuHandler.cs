@@ -1,4 +1,4 @@
-﻿using BilibiliDM_PluginFramework;
+﻿using DouyuDM_PluginFramework;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +12,7 @@ namespace DGJv3
 {
     class DanmuHandler : INotifyPropertyChanged
     {
-        private ObservableCollection<SongItem> Songs;
+        private ObservableCollection<InternalSongItem> Songs;
 
         private ObservableCollection<BlackListItem> Blacklist;
 
@@ -36,7 +36,7 @@ namespace DGJv3
         public uint MaxPersonSongNum { get => _maxPersonSongNum; set => SetField(ref _maxPersonSongNum, value); }
         private uint _maxPersonSongNum;
 
-        internal DanmuHandler(ObservableCollection<SongItem> songs, Player player, Downloader downloader, SearchModules searchModules, ObservableCollection<BlackListItem> blacklist)
+        internal DanmuHandler(ObservableCollection<InternalSongItem> songs, Player player, Downloader downloader, SearchModules searchModules, ObservableCollection<BlackListItem> blacklist)
         {
             dispatcher = Dispatcher.CurrentDispatcher;
             Songs = songs;
@@ -54,15 +54,15 @@ namespace DGJv3
         /// </para>
         /// </summary>
         /// <param name="danmakuModel"></param>
-        internal void ProcessDanmu(DanmakuModel danmakuModel)
+        internal void ProcessMessage(MessageModel messageModel)
         {
-            if (danmakuModel.MsgType != MsgTypeEnum.Comment || string.IsNullOrWhiteSpace(danmakuModel.CommentText))
+            if (messageModel.MsgType != MsgTypeEnum.Comment || string.IsNullOrWhiteSpace(messageModel.CommentText))
                 return;
 
-            string[] commands = danmakuModel.CommentText.Split(SPLIT_CHAR, StringSplitOptions.RemoveEmptyEntries);
+            string[] commands = messageModel.CommentText.Split(SPLIT_CHAR, StringSplitOptions.RemoveEmptyEntries);
             string rest = string.Join(" ", commands.Skip(1));
 
-            if (danmakuModel.isAdmin)
+            if (messageModel.UserRoomIdentity == 4 || messageModel.UserRoomIdentity == 5)
             {
                 switch (commands[0])
                 {
@@ -119,7 +119,7 @@ namespace DGJv3
                 case "点歌":
                 case "點歌":
                     {
-                        DanmuAddSong(danmakuModel, rest);
+                        DanmuAddSong(messageModel, rest);
                     }
                     return;
                 case "取消點歌":
@@ -127,7 +127,7 @@ namespace DGJv3
                     {
                         dispatcher.Invoke(() =>
                         {
-                            SongItem songItem = Songs.LastOrDefault(x => x.UserName == danmakuModel.UserName && x.Status != SongStatus.Playing);
+                            InternalSongItem songItem = Songs.LastOrDefault(x => x.UserName == messageModel.UserName && x.Status != SongStatus.Playing);
                             if (songItem != null)
                             {
                                 songItem.Remove(Songs, Downloader, Player);
@@ -145,9 +145,9 @@ namespace DGJv3
             }
         }
 
-        private void DanmuAddSong(DanmakuModel danmakuModel, string keyword)
+        private void DanmuAddSong(MessageModel messageModel, string keyword)
         {
-            if (dispatcher.Invoke(callback: () => CanAddSong(username: danmakuModel.UserName)))
+            if (dispatcher.Invoke(callback: () => CanAddSong(username: messageModel.UserName)))
             {
                 SongInfo songInfo = null;
 
@@ -169,12 +169,12 @@ namespace DGJv3
                 Log($"点歌成功:{songInfo.Name}");
                 dispatcher.Invoke(callback: () =>
                 {
-                    if (CanAddSong(danmakuModel.UserName) &&
+                    if (CanAddSong(messageModel.UserName) &&
                         !Songs.Any(x =>
-                            x.SongId == songInfo.Id &&
+                            x.SongGId == songInfo.Id &&
                             x.Module.UniqueId == songInfo.Module.UniqueId)
                     )
-                        Songs.Add(new SongItem(songInfo, danmakuModel.UserName));
+                        Songs.Add(new InternalSongItem(songInfo, messageModel.UserName));
                 });
             }
         }

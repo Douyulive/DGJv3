@@ -70,7 +70,7 @@
                             <GridViewColumn Header="状态" DisplayMemberBinding="{Binding Status,Converter={StaticResource SongStatusStringConverter}}"/>
                             <GridViewColumn Header="歌名" DisplayMemberBinding="{Binding SongName, Mode=OneTime}"/>
                             <GridViewColumn Header="点歌人" DisplayMemberBinding="{Binding UserName, Mode=OneTime}"/>
-                            <GridViewColumn Header="歌手" DisplayMemberBinding="{Binding SingersText, Mode=OneTime}"/>
+                            <GridViewColumn Header="歌手" DisplayMemberBinding="{Binding ArtistsText, Mode=OneTime}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -309,10 +309,6 @@
                                 <StackPanel Margin="5" Orientation="Horizontal">
                                     <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" IsChecked="{Binding Player.IsUserPrior}"/>
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center">用户点歌优先于空闲歌单播放</TextBlock>
-                                </StackPanel>
-                                <StackPanel Margin="5" Orientation="Horizontal">
-                                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" IsChecked="{Binding IsLogRedirectDanmaku}" x:Name="LogRedirectToggleButton" Checked="LogRedirectToggleButton_OnChecked"/>
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center">点歌反馈发送到弹幕（需要登录中心）</TextBlock>
                                 </StackPanel>
                                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                     Text="{Binding DanmuHandler.MaxTotalSongNum,UpdateSourceTrigger=PropertyChanged,Delay=200}"

@@ -12,7 +12,7 @@ namespace DGJv3
 {
     class Writer : INotifyPropertyChanged
     {
-        private ObservableCollection<SongItem> Songs;
+        private ObservableCollection<InternalSongItem> Songs;
 
         private ObservableCollection<SongInfo> Playlist;
 
@@ -30,7 +30,7 @@ namespace DGJv3
         private string scribanTemplate;
         private string result;
 
-        internal Writer(ObservableCollection<SongItem> songs, ObservableCollection<SongInfo> playlist, Player player, DanmuHandler danmuHandler)
+        internal Writer(ObservableCollection<InternalSongItem> songs, ObservableCollection<SongInfo> playlist, Player player, DanmuHandler danmuHandler)
         {
             Songs = songs;
             Playlist = playlist;
@@ -84,7 +84,7 @@ namespace DGJv3
             var localsongs = Songs.Select(x => new
             {
                 歌名 = x.SongName,
-                歌手 = x.SingersText,
+                歌手 = x.ArtistsText,
                 歌曲id = x.SongId,
                 点歌人 = x.UserName,
                 状态 = x.Status.ToStatusString(),

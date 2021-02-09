@@ -1,25 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using Music.SDK.Models;
+using Music.SDK.Models.Enums;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace DGJv3
 {
-    public class SongItem : INotifyPropertyChanged
+    public class InternalSongItem : SongItem, INotifyPropertyChanged
     {
 
-        internal SongItem(SongInfo songInfo, string userName)
+        internal InternalSongItem(SongInfo songInfo, string userName)
         {
             Status = SongStatus.WaitingDownload;
 
             UserName = userName;
 
             Module = songInfo.Module;
-            SongId = songInfo.Id;
+
+            switch (songInfo.Platform)
+            {
+                case PlatformType.QQMusic:
+                    SongMId = songInfo.Id;
+                    break;
+                case PlatformType.NeteaseMusic:
+                    SongId = long.Parse(songInfo.Id);
+                    break;
+                case PlatformType.KuWoMusic:
+                    SongId = long.Parse(songInfo.Id);
+                    break;
+                case PlatformType.KuGouMusic:
+                    SongFileHash = songInfo.Id;
+                    SongAlbumId = long.Parse(songInfo.AlbumId);
+                    break;
+                case PlatformType.BiliBiliMusic:
+                    SongId = long.Parse(songInfo.Id);
+                    break;
+                default:
+                    break;
+            }
+
             SongName = songInfo.Name;
-            Singers = songInfo.Singers;
+            SongArtistName = new List<string>(songInfo.Singers);
             Lyric = (songInfo.Lyric == null) ? Lrc.NoLyric : Lrc.InitLrc(songInfo.Lyric);
             Note = songInfo.Note;
-
         }
 
         /// <summary>
@@ -35,36 +58,18 @@ namespace DGJv3
         { get; set; }
 
         /// <summary>
-        /// 歌曲ID
-        /// </summary>
-        public string SongId
-        { get; internal set; }
-
-        /// <summary>
-        /// 歌名
-        /// </summary>
-        public string SongName
-        { get; internal set; }
-
-        /// <summary>
         /// string的歌手列表
         /// </summary>
-        public string SingersText
+        public string ArtistsText
         {
             get
             {
                 string output = "";
-                foreach (string str in Singers)
+                foreach (string str in SongArtistName)
                     output += str + ";";
                 return output;
             }
         }
-
-        /// <summary>
-        /// 歌手列表
-        /// </summary>
-        public string[] Singers
-        { get; internal set; }
 
         /// <summary>
         /// 点歌人

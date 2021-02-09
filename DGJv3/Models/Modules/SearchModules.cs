@@ -25,11 +25,11 @@ namespace DGJv3
             NullModule = new NullSearchModule();
             Modules.Add(NullModule);
 
-            Modules.Add(new LwlApiNetease());
-            Modules.Add(new LwlApiTencent());
-            Modules.Add(new LwlApiKugou());
-            Modules.Add(new LwlApiBaidu());
-            Modules.Add(new LwlApiXiami());
+            Modules.Add(new CoelSdkNetease());
+            Modules.Add(new CoelSdkQQ());
+            Modules.Add(new CoelSdkKuGou());
+            Modules.Add(new CoelSdkKuWo());
+            Modules.Add(new CoelSdkBiliBili());
 
             // TODO: 加载外置拓展
 

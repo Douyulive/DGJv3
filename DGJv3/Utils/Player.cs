@@ -16,7 +16,7 @@ namespace DGJv3
     {
         private Random random = new Random();
 
-        private ObservableCollection<SongItem> Songs;
+        private ObservableCollection<InternalSongItem> Songs;
 
         private ObservableCollection<SongInfo> Playlist;
 
@@ -66,12 +66,12 @@ namespace DGJv3
         /// </summary>
         public TimeSpan CurrentTime
         {
-            get => mp3FileReader == null ? TimeSpan.Zero : mp3FileReader.CurrentTime;
+            get => mediaFileReader == null ? TimeSpan.Zero : mediaFileReader.CurrentTime;
             set
             {
-                if (mp3FileReader != null)
+                if (mediaFileReader != null)
                 {
-                    mp3FileReader.CurrentTime = value;
+                    mediaFileReader.CurrentTime = value;
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace DGJv3
         /// <summary>
         /// 歌曲全长
         /// </summary>
-        public TimeSpan TotalTime { get => mp3FileReader == null ? TimeSpan.Zero : mp3FileReader.TotalTime; }
+        public TimeSpan TotalTime { get => mediaFileReader == null ? TimeSpan.Zero : mediaFileReader.TotalTime; }
 
         public string TotalTimeString { get => Math.Floor(TotalTime.TotalMinutes) + ":" + TotalTime.Seconds; }
 
@@ -179,15 +179,15 @@ namespace DGJv3
 
         private IWavePlayer wavePlayer = null;
 
-        private Mp3FileReader mp3FileReader = null;
+        private MediaFoundationReader mediaFileReader = null;
 
         private SampleChannel sampleChannel = null;
 
-        private SongItem currentSong = null;
+        private InternalSongItem currentSong = null;
 
         private int currentLyricIndex = -1;
 
-        public Player(ObservableCollection<SongItem> songs, ObservableCollection<SongInfo> playlist)
+        public Player(ObservableCollection<InternalSongItem> songs, ObservableCollection<SongInfo> playlist)
         {
             Songs = songs;
             Playlist = playlist;
@@ -223,7 +223,7 @@ namespace DGJv3
         /// <param name="e"></param>
         private void UpdateTimeTimer_Tick(object sender, EventArgs e)
         {
-            if (mp3FileReader != null)
+            if (mediaFileReader != null)
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentTime)));
 
@@ -273,7 +273,7 @@ namespace DGJv3
                 {
                     index = random.Next(0, Playlist.Count);
                     time++;
-                } while (Songs.Any(ele => Playlist[index].Id == ele.SongId) && time < 3);
+                } while (Songs.Any(ele => Playlist[index].Id == ele.SongGId) && time < 3);
 
 
                 SongInfo info = Playlist[index];
@@ -281,7 +281,7 @@ namespace DGJv3
                 {
                     info.Lyric = info.Module.SafeGetLyricById(info.Id);
                 }
-                Songs.Add(new SongItem(info, Utilities.SparePlaylistUser));
+                Songs.Add(new InternalSongItem(info, Utilities.SparePlaylistUser));
             }
         }
 
@@ -289,27 +289,34 @@ namespace DGJv3
         /// 加载歌曲并开始播放
         /// </summary>
         /// <param name="songItem"></param>
-        private void LoadSong(SongItem songItem)
+        private void LoadSong(InternalSongItem songItem)
         {
-            currentSong = songItem;
-
-            currentSong.Status = SongStatus.Playing;
-
-            wavePlayer = CreateIWavePlayer();
-            mp3FileReader = new Mp3FileReader(currentSong.FilePath);
-            sampleChannel = new SampleChannel(mp3FileReader)
+            try
             {
-                Volume = Volume
-            };
+                currentSong = songItem;
 
-            wavePlayer.PlaybackStopped += (sender, e) => UnloadSong();
+                currentSong.Status = SongStatus.Playing;
 
-            wavePlayer.Init(sampleChannel);
-            wavePlayer.Play();
+                wavePlayer = CreateIWavePlayer();
+                mediaFileReader = new MediaFoundationReader(currentSong.FilePath);
+                sampleChannel = new SampleChannel(mediaFileReader)
+                {
+                    Volume = Volume
+                };
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalTime)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentTime)));
+                wavePlayer.PlaybackStopped += (sender, e) => UnloadSong();
+
+                wavePlayer.Init(sampleChannel);
+                wavePlayer.Play();
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalTime)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentTime)));
+            }
+            catch
+            {
+                UnloadSong();
+            }
         }
 
         /// <summary>
@@ -325,13 +332,13 @@ namespace DGJv3
 
             try
             {
-                mp3FileReader?.Dispose();
+                mediaFileReader?.Dispose();
             }
             catch (Exception) { }
 
             wavePlayer = null;
             sampleChannel = null;
-            mp3FileReader = null;
+            mediaFileReader = null;
 
             try
             {

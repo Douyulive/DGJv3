@@ -8,7 +8,7 @@ namespace DGJv3
 {
     internal static class Extensions
     {
-        internal static void Remove(this SongItem songItem, ObservableCollection<SongItem> songList, Downloader downloader, Player player)
+        internal static void Remove(this InternalSongItem songItem, ObservableCollection<InternalSongItem> songList, Downloader downloader, Player player)
         {
             switch (songItem.Status)
             {
@@ -30,7 +30,7 @@ namespace DGJv3
             }
         }
 
-        internal static string GetDownloadUrl(this SongItem songItem) => songItem.Module.SafeGetDownloadUrl(songItem);
+        internal static string GetDownloadUrl(this InternalSongItem songItem) => songItem.Module.SafeGetDownloadUrl(songItem);
 
         internal static bool IsInBlacklist(this SongInfo songInfo, IEnumerable<BlackListItem> blackList)
         {
