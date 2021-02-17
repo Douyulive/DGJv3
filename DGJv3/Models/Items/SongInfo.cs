@@ -14,7 +14,7 @@ namespace DGJv3
         [JsonProperty("smid")]
         public string ModuleId { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty("spft")]
         public PlatformType Platform { get; set; }
 
         [JsonProperty("siid")]

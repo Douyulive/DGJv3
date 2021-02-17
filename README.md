@@ -8,6 +8,7 @@
 - 酷我音乐
 - 酷狗音乐
 - 哔哩哔哩音乐
+- 千千音乐
 
 ## 原作者
  - [Genteure](https://github.com/Genteure)

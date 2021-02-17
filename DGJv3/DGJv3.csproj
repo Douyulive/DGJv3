@@ -65,8 +65,8 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.4.1.1101, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.4.1.1101\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Music-SDK, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoelWu.Music.SDK.1.0.6\lib\netstandard2.0\Music-SDK.dll</HintPath>
+    <Reference Include="Music-SDK, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoelWu.Music.SDK.1.0.7\lib\netstandard2.0\Music-SDK.dll</HintPath>
     </Reference>
     <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
@@ -93,6 +93,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InternalModule\CoelSdkQianQian.cs" />
     <Compile Include="Models\Items\BlackListItem.cs" />
     <Compile Include="Models\Enums\BlackListType.cs" />
     <Compile Include="Models\UI\Converter\BlackListTypeStringConverter.cs" />

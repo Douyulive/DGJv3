@@ -35,7 +35,18 @@ namespace DGJv3
                 case PlatformType.BiliBiliMusic:
                     SongId = long.Parse(songInfo.Id);
                     break;
+                case PlatformType.QianQianMusic:
+                    SongId = long.Parse(songInfo.Id);
+                    break;
                 default:
+                    try
+                    {
+                        SongId = long.Parse(songInfo.Id);
+                    }
+                    catch
+                    {
+
+                    }
                     break;
             }
 

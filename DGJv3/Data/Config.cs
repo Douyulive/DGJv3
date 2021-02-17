@@ -40,9 +40,6 @@ namespace DGJv3
         [JsonProperty("up")]
         public bool IsUserPrior { get; set; } = true;
 
-        [JsonProperty("lrd")]
-        public bool IsLogRedirectDanmaku { get; set; } = false;
-
         [JsonProperty("ldll")]
         public int LogDanmakuLengthLimit { get; set; } = 20;
 

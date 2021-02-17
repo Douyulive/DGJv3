@@ -116,6 +116,7 @@ namespace DGJv3.InternalModule
             catch (Exception ex)
             {
                 Log($"歌曲 {songItem.SongName} 疑似版权不能下载(ex:{ex.Message})");
+                throw ex;
                 return null;
             }
         }

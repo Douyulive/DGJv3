@@ -11,17 +11,17 @@ namespace DGJv3
     {
         public NullSearchModule() => SetInfo("不使用", string.Empty, string.Empty, string.Empty, string.Empty);
 
-        protected override DownloadStatus Download(SongItem item)
+        protected override DownloadStatus Download(SongItem songItem)
         {
             return DownloadStatus.Failed;
         }
 
-        protected override string GetDownloadUrl(SongItem songInfo)
+        protected override string GetDownloadUrl(SongItem songItem)
         {
             return null;
         }
 
-        protected override string GetLyric(SongItem songInfo)
+        protected override string GetLyric(SongItem songItem)
         {
             return null;
         }

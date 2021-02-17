@@ -30,6 +30,7 @@ namespace DGJv3
             Modules.Add(new CoelSdkKuGou());
             Modules.Add(new CoelSdkKuWo());
             Modules.Add(new CoelSdkBiliBili());
+            Modules.Add(new CoelSdkQianQian());
 
             // TODO: 加载外置拓展
 
