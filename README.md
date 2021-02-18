@@ -9,6 +9,7 @@
 - 酷狗音乐
 - 哔哩哔哩音乐
 - 千千音乐
+- 咪咕音乐（插件）
 
 ## 原作者
  - [Genteure](https://github.com/Genteure)

@@ -12,7 +12,7 @@ namespace DGJv3
         /// <summary>
         /// 默认服务器地址
         /// </summary>
-        public const string DEFAULT_BASE_URL = "https://www.danmuji.org";
+        public const string DEFAULT_BASE_URL = "https://www.dydmj.org";
 
         /// <summary>
         /// API的路径
